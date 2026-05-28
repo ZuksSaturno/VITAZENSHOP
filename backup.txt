@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VitaZen — Suplementos Naturais</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep: #1a3a1a;
+    --green-mid: #2d5a2d;
+    --green-main: #3d7a3d;
+    --green-light: #6aaa6a;
+    --green-pale: #e8f5e8;
+    --green-mist: #f4faf4;
+    --cream: #faf8f2;
+    --text-dark: #1a1a1a;
+    --text-mid: #444;
+    --text-muted: #888;
+    --border: rgba(60,120,60,0.15);
+    --shadow-hover: 0 8px 40px rgba(30,80,30,0.16);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text-dark); overflow-x: hidden; }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(250,248,242,0.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: var(--green-deep); }
+  .logo span { color: var(--green-main); }
+  .nav-links { display: flex; gap: 20px; }
+  .nav-links a { font-size: 13px; font-weight: 500; color: var(--text-mid); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--green-main); }
+  .cart-trigger {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--green-main); color: white;
+    border: none; padding: 9px 18px; border-radius: 100px;
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    transition: background 0.2s; font-family: 'DM Sans', sans-serif;
+  }
+  .cart-trigger:hover { background: var(--green-deep); }
+  .cart-count {
+    background: white; color: var(--green-main);
+    width: 20px; height: 20px; border-radius: 50%;
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .hero {
+    position: relative; overflow: hidden;
+    background: var(--green-deep); padding: 80px 24px 72px; text-align: center;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(109,180,109,0.18) 0%, transparent 70%);
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(109,180,109,0.2); border: 1px solid rgba(109,180,109,0.4);
+    color: var(--green-light); font-size: 12px; font-weight: 500;
+    padding: 5px 14px; border-radius: 100px; margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(30px, 6vw, 52px); font-weight: 600; line-height: 1.15;
+    color: white; margin-bottom: 16px; position: relative;
+  }
+  .hero h1 em { color: var(--green-light); font-style: italic; }
+  .hero p { font-size: 16px; color: rgba(255,255,255,0.65); max-width: 480px; margin: 0 auto 36px; font-weight: 300; line-height: 1.7; position: relative; }
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green-light); color: var(--green-deep);
+    font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
+    padding: 14px 32px; border-radius: 100px; border: none; cursor: pointer;
+    transition: all 0.2s; position: relative;
+  }
+  .hero-cta:hover { background: white; transform: translateY(-1px); }
+  .hero-stats { display: flex; justify-content: center; gap: 48px; margin-top: 56px; position: relative; }
+  .stat { text-align: center; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; color: white; }
+  .stat-label { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+  .trust-bar {
+    background: var(--green-pale); border-bottom: 1px solid var(--border);
+    padding: 14px 24px; display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;
+  }
+  .trust-item { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; color: var(--green-mid); }
+
+  .section { padding: 64px 24px; max-width: 1100px; margin: 0 auto; }
+  .section-header { text-align: center; margin-bottom: 48px; }
+  .section-tag { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--green-main); margin-bottom: 12px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(24px, 4vw, 36px); font-weight: 600; color: var(--text-dark); line-height: 1.2; }
+  .section-sub { font-size: 15px; color: var(--text-muted); margin-top: 10px; }
+
+  .filter-tabs { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 40px; }
+  .filter-tab {
+    padding: 8px 20px; border-radius: 100px; border: 1px solid var(--border);
+    background: white; color: var(--text-mid); font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+  }
+  .filter-tab:hover { border-color: var(--green-main); color: var(--green-main); }
+  .filter-tab.active { background: var(--green-main); color: white; border-color: var(--green-main); }
+
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+  .product-card {
+    background: white; border: 1px solid var(--border); border-radius: 16px;
+    overflow: hidden; transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+  .product-visual {
+    height: 180px; display: flex; align-items: center; justify-content: center;
+    font-size: 56px; position: relative;
+  }
+  .product-visual.caps { background: linear-gradient(135deg, #e8f5e8, #c8e8c8); }
+  .product-visual.cha { background: linear-gradient(135deg, #f0ffe8, #d4f0c0); }
+  .product-visual.outros { background: linear-gradient(135deg, #fff0f8, #ffd8ec); }
+  .product-visual.shake { background: linear-gradient(135deg, #fff8e8, #ffe8c0); }
+  .product-badge {
+    position: absolute; top: 12px; left: 12px;
+    background: var(--green-main); color: white;
+    font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 100px;
+  }
+  .product-body { padding: 16px; }
+  .product-name { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 600; color: var(--text-dark); margin-bottom: 6px; line-height: 1.3; }
+  .product-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; }
+  .product-price { font-size: 18px; font-weight: 700; color: var(--green-mid); font-family: 'Playfair Display', serif; }
+  .product-price-note { font-size: 10px; color: var(--text-muted); }
+  .add-btn {
+    background: var(--green-main); color: white; border: none;
+    width: 36px; height: 36px; border-radius: 50%; font-size: 18px;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .add-btn:hover { background: var(--green-deep); transform: scale(1.1); }
+  .add-btn.added { background: #27ae60; }
+
+  .benefits-section { background: var(--green-deep); padding: 64px 24px; }
+  .benefits-inner { max-width: 1100px; margin: 0 auto; }
+  .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin-top: 48px; }
+  .benefit-card {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 28px 20px; text-align: center; transition: background 0.2s;
+  }
+  .benefit-card:hover { background: rgba(255,255,255,0.1); }
+  .benefit-icon { font-size: 32px; margin-bottom: 14px; }
+  .benefit-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; color: white; margin-bottom: 8px; }
+  .benefit-desc { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6; }
+
+  .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+  .testimonial-card { background: white; border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+  .stars { color: #f39c12; font-size: 13px; margin-bottom: 12px; }
+  .testimonial-text { font-size: 14px; color: var(--text-mid); line-height: 1.7; margin-bottom: 16px; font-style: italic; }
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--green-pale); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: var(--green-mid); flex-shrink: 0; }
+  .author-name { font-size: 13px; font-weight: 600; color: var(--text-dark); }
+  .author-tag { font-size: 11px; color: var(--text-muted); }
+
+  footer { background: var(--green-deep); padding: 40px 24px; text-align: center; }
+  .footer-logo { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600; color: white; margin-bottom: 8px; }
+  .footer-logo span { color: var(--green-light); }
+  .footer-tagline { font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 24px; }
+  .footer-copy { font-size: 11px; color: rgba(255,255,255,0.25); }
+
+  /* CART DRAWER */
+  .cart-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; backdrop-filter: blur(4px); }
+  .cart-overlay.open { display: block; }
+  .cart-drawer {
+    position: fixed; right: 0; top: 0; bottom: 0;
+    width: min(460px, 100vw); background: white; z-index: 201;
+    display: flex; flex-direction: column;
+    transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: -8px 0 40px rgba(0,0,0,0.15);
+  }
+  .cart-drawer.open { transform: translateX(0); }
+  .cart-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .cart-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; }
+  .cart-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+  .cart-close:hover { background: var(--green-pale); }
+  .cart-items { flex: 1; overflow-y: auto; padding: 16px 24px; }
+  .cart-empty { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+  .cart-empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .cart-item { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .cart-item-icon { width: 52px; height: 52px; border-radius: 12px; background: var(--green-mist); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+  .cart-item-info { flex: 1; min-width: 0; }
+  .cart-item-name { font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cart-item-price { font-size: 13px; color: var(--green-mid); font-weight: 600; }
+  .cart-item-controls { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .qty-btn { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border); background: none; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+  .qty-btn:hover { background: var(--green-pale); border-color: var(--green-main); }
+  .qty-num { font-size: 14px; font-weight: 600; min-width: 20px; text-align: center; }
+
+  .cart-footer { padding: 20px 24px; border-top: 1px solid var(--border); background: var(--cream); }
+  .cart-total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .cart-total-label { font-size: 14px; color: var(--text-muted); }
+  .cart-total-value { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: var(--green-deep); }
+
+  .form-label { font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; display: block; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+  .form-input {
+    width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px;
+    font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--text-dark); background: white;
+    transition: border-color 0.2s; outline: none;
+  }
+  .form-input:focus { border-color: var(--green-main); }
+  .form-input.full { grid-column: 1 / -1; }
+  .form-input.error { border-color: #e74c3c; }
+
+  .payment-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
+  .pay-opt {
+    flex: 1; padding: 10px; border: 1px solid var(--border); border-radius: 10px;
+    cursor: pointer; text-align: center; font-size: 13px; font-weight: 500;
+    color: var(--text-mid); transition: all 0.2s; background: white;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .pay-opt.active { border-color: var(--green-main); background: var(--green-pale); color: var(--green-mid); }
+
+  .checkout-btn {
+    width: 100%; background: var(--green-main); color: white; border: none;
+    padding: 16px; border-radius: 100px; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .checkout-btn:hover:not(:disabled) { background: var(--green-deep); transform: translateY(-1px); }
+  .checkout-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+
+  .loading-spinner {
+    width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white; border-radius: 50%;
+    animation: spin 0.7s linear infinite; display: none;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .wpp-float {
+    position: fixed; bottom: 24px; right: 24px; z-index: 150;
+    width: 56px; height: 56px; border-radius: 50%; background: #25D366; border: none;
+    font-size: 26px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(37,211,102,0.4); transition: transform 0.2s;
+  }
+  .wpp-float:hover { transform: scale(1.1); }
+
+  .toast {
+    position: fixed; bottom: 90px; right: 24px; z-index: 300;
+    background: var(--green-deep); color: white;
+    padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: 500;
+    transform: translateX(120%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  }
+  .toast.show { transform: translateX(0); }
+
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .hero-stats { gap: 24px; }
+    .trust-bar { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Vita<span>Zen</span></div>
+  <div style="display:flex;align-items:center;gap:16px">
+    <div class="nav-links">
+      <a href="#produtos">Produtos</a>
+      <a href="#beneficios">Sobre</a>
+    </div>
+    <button class="cart-trigger" onclick="openCart()">
+      🛒 Carrinho <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">🌿 Suplementos 100% Naturais</div>
+  <h1>Sua jornada para um<br>corpo mais <em>leve e saudável</em></h1>
+  <p>Produtos naturais selecionados para acelerar seus resultados com saúde e segurança.</p>
+  <button class="hero-cta" onclick="document.getElementById('produtos').scrollIntoView({behavior:'smooth'})">Ver produtos ↓</button>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">5k+</div><div class="stat-label">Clientes satisfeitos</div></div>
+    <div class="stat"><div class="stat-num">11</div><div class="stat-label">Produtos naturais</div></div>
+    <div class="stat"><div class="stat-num">4.9★</div><div class="stat-label">Avaliação média</div></div>
+  </div>
+</section>
+
+<div class="trust-bar">
+  <div class="trust-item">🚚 Entrega para todo o Brasil</div>
+  <div class="trust-item">🔒 Pagamento 100% seguro</div>
+  <div class="trust-item">🌿 Ingredientes naturais</div>
+  <div class="trust-item">⚡ Resultados rápidos</div>
+</div>
+
+<section class="section" id="produtos">
+  <div class="section-header">
+    <div class="section-tag">Nossa Linha Completa</div>
+    <h2 class="section-title">Produtos para cada objetivo</h2>
+    <p class="section-sub">Escolha o que combina com você e adicione ao carrinho</p>
+  </div>
+  <div class="filter-tabs">
+    <button class="filter-tab active" onclick="filterProducts('todos',this)">Todos</button>
+    <button class="filter-tab" onclick="filterProducts('capsulas',this)">Cápsulas</button>
+    <button class="filter-tab" onclick="filterProducts('cha',this)">Chás</button>
+    <button class="filter-tab" onclick="filterProducts('shake',this)">Shakes</button>
+    <button class="filter-tab" onclick="filterProducts('outros',this)">Outros</button>
+  </div>
+  <div class="products-grid" id="productsGrid"></div>
+</section>
+
+<section class="benefits-section" id="beneficios">
+  <div class="benefits-inner">
+    <div class="section-header">
+      <div class="section-tag" style="color:var(--green-light)">Por que a VitaZen</div>
+      <h2 class="section-title" style="color:white">Comprometidos com<br>seus resultados</h2>
+    </div>
+    <div class="benefits-grid">
+      <div class="benefit-card"><div class="benefit-icon">🌿</div><div class="benefit-title">100% Natural</div><div class="benefit-desc">Ingredientes selecionados sem químicos artificiais</div></div>
+      <div class="benefit-card"><div class="benefit-icon">⚡</div><div class="benefit-title">Resultado rápido</div><div class="benefit-desc">Fórmulas para resultados visíveis em poucas semanas</div></div>
+      <div class="benefit-card"><div class="benefit-icon">🚚</div><div class="benefit-title">Entrega rápida</div><div class="benefit-desc">Enviamos para todo o Brasil com rastreamento</div></div>
+      <div class="benefit-card"><div class="benefit-icon">💬</div><div class="benefit-title">Suporte no WhatsApp</div><div class="benefit-desc">Atendimento personalizado para suas dúvidas</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-header">
+    <div class="section-tag">Depoimentos</div>
+    <h2 class="section-title">Resultados reais de clientes reais</h2>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">"Comecei com o Detox Caps e perdi 5kg no primeiro mês. Incrível, sem efeitos colaterais!"</div>
+      <div class="testimonial-author"><div class="avatar">AM</div><div><div class="author-name">Ana M.</div><div class="author-tag">✓ Compra verificada</div></div></div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">"O Chá Premium é maravilhoso! Desinchei em uma semana e me sinto muito mais disposta."</div>
+      <div class="testimonial-author"><div class="avatar">CS</div><div><div class="author-name">Carla S.</div><div class="author-tag">✓ Compra verificada</div></div></div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">"O GreenSleep mudou minha vida. Durmo melhor e acordo cheio de energia!"</div>
+      <div class="testimonial-author"><div class="avatar">RF</div><div><div class="author-name">Roberto F.</div><div class="author-tag">✓ Compra verificada</div></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Vita<span>Zen</span></div>
+  <div class="footer-tagline">Suplementos naturais para uma vida mais saudável</div>
+  <div class="footer-copy">© 2025 VitaZen. Todos os direitos reservados.</div>
+</footer>
+
+<!-- CART OVERLAY -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <div class="cart-title">Seu carrinho</div>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty"><div class="cart-empty-icon">🛒</div><div>Seu carrinho está vazio</div></div>
+  </div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-total-row">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-value" id="cartTotal">R$ 0,00</span>
+    </div>
+
+    <label class="form-label">Seus dados</label>
+    <div class="form-grid">
+      <input class="form-input full" id="fNome" placeholder="Nome completo" type="text">
+      <input class="form-input full" id="fEmail" placeholder="Seu e-mail" type="email">
+      <input class="form-input full" id="fTelefone" placeholder="WhatsApp (ex: 11 99999-9999)" type="tel">
+      <input class="form-input full" id="fCpf" placeholder="CPF (opcional)" type="text">
+      <input class="form-input full" id="fRua" placeholder="Rua e número" type="text">
+      <input class="form-input" id="fBairro" placeholder="Bairro" type="text">
+      <input class="form-input" id="fCidade" placeholder="Cidade" type="text">
+      <input class="form-input" id="fEstado" placeholder="Estado (SP)" type="text">
+      <input class="form-input full" id="fCep" placeholder="CEP (00000-000)" type="text">
+    </div>
+
+    <label class="form-label">Forma de pagamento</label>
+    <div class="payment-toggle">
+      <button class="pay-opt active" id="payPix" onclick="selectPayment('PIX')">💠 PIX</button>
+      <button class="pay-opt" id="payCard" onclick="selectPayment('Cartão')">💳 Cartão</button>
+    </div>
+
+    <button class="checkout-btn" onclick="finalizarPedido()" id="checkoutBtn">
+      <div class="loading-spinner" id="spinner"></div>
+      <span id="checkoutLabel">🔒 Ir para o pagamento</span>
+    </button>
+  </div>
+</div>
+
+<button class="wpp-float" onclick="openCart()">💬</button>
+<div class="toast" id="toast"></div>
+
+<script>
+const products = [
+  { id:1,  name:'Greenful Detox Caps',            desc:'Cápsulas naturais para emagrecimento, 60 unidades. Resultado rápido em semanas.',                                              price:120, icon:'💊', cat:'capsulas', badge:'🔥 Mais vendido' },
+  { id:2,  name:'Greenfull Chá Premium 150g',      desc:'Carqueja, Chá verde, Erva Doce, Gengibre, Hibisco, Hortelã, Laranja Amarga, Maracujá Azedo, Sálvia.',                        price:100, icon:'🍵', cat:'cha',      badge:'⭐ Destaque' },
+  { id:3,  name:'Greenfull Chá Slim 80g',          desc:'Carqueja, Chá verde, Erva Doce, Gengibre, Hibisco, Hortelã, Laranja Amarga, Maracujá Azedo, Sálvia.',                        price:70,  icon:'🌿', cat:'cha',      badge:null },
+  { id:4,  name:'SmartFit Cinta Greenfull',        desc:'Íons negativos, imãs, 10 talas, corte ergonômico, homologada na ANVISA. Tamanhos: PP, P, M, G, GG.',                        price:209, icon:'🩹', cat:'outros',   badge:'🏅 Premium' },
+  { id:5,  name:'GreenCollagen Beauty+',           desc:'Fórmula 5 em 1, 5x mais potente. Melhoras visíveis em curto tempo de uso.',                                                  price:150, icon:'✨', cat:'outros',   badge:'💎 Beauty' },
+  { id:6,  name:'GreenVitta Multivit',             desc:'Suplemento em cápsulas para cuidado dos Cabelos, Unhas e Pele.',                                                              price:90,  icon:'💛', cat:'capsulas', badge:null },
+  { id:7,  name:'GreenSleep Melatonina 3mg',       desc:'Melhora no sono — seu corpo descansa profundamente e repõe todas as energias para o dia a dia.',                              price:80,  icon:'🌙', cat:'capsulas', badge:null },
+  { id:8,  name:'Shake Greenfull Açaí & Banana',  desc:'100% natural. Mix de vitaminas e minerais essenciais para a promoção de uma boa saúde.',                                      price:90,  icon:'🫐', cat:'shake',    badge:null },
+  { id:9,  name:'Shake Greenfull Baunilha Suave',  desc:'100% natural. Mix de vitaminas e minerais essenciais para a promoção de uma boa saúde.',                                     price:90,  icon:'🍦', cat:'shake',    badge:null },
+  { id:10, name:'Shake Greenfull Choco Belga',     desc:'100% natural. Mix de vitaminas e minerais essenciais para a promoção de uma boa saúde.',                                     price:90,  icon:'🍫', cat:'shake',    badge:null },
+  { id:11, name:'Shake Greenfull Morango Fresh',   desc:'100% natural. Mix de vitaminas e minerais essenciais para a promoção de uma boa saúde.',                                     price:90,  icon:'🍓', cat:'shake',    badge:null },
+];
+
+const visualClass = { capsulas:'caps', cha:'cha', outros:'outros', shake:'shake' };
+let cart = {};
+let selectedPayment = 'PIX';
+
+function renderProducts(filter='todos') {
+  const grid = document.getElementById('productsGrid');
+  const list = filter === 'todos' ? products : products.filter(p => p.cat === filter);
+  grid.innerHTML = list.map(p => `
+    <div class="product-card">
+      <div class="product-visual ${visualClass[p.cat]||''}">
+        ${p.badge ? `<div class="product-badge">${p.badge}</div>` : ''}
+        <span style="font-size:52px">${p.icon}</span>
+      </div>
+      <div class="product-body">
+        <div class="product-name">${p.name}</div>
+        <div class="product-desc">${p.desc}</div>
+        <div class="product-footer">
+          <div>
+            <div class="product-price">R$ ${p.price.toFixed(2).replace('.',',')}</div>
+            <div class="product-price-note">ou 3x no cartão</div>
+          </div>
+          <button class="add-btn" id="btn${p.id}" onclick="addToCart(${p.id})">+</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function filterProducts(cat, el) {
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderProducts(cat);
+}
+
+function addToCart(id) {
+  const p = products.find(x => x.id === id);
+  cart[id] = (cart[id] || 0) + 1;
+  updateCartUI();
+  showToast(`${p.icon} Adicionado ao carrinho!`);
+  const btn = document.getElementById('btn'+id);
+  if(btn){ btn.textContent='✓'; btn.classList.add('added'); setTimeout(()=>{btn.textContent='+';btn.classList.remove('added');},800); }
+}
+
+function changeQty(id, delta) {
+  cart[id] = (cart[id]||0) + delta;
+  if(cart[id] <= 0) delete cart[id];
+  updateCartUI();
+}
+
+function updateCartUI() {
+  const count = Object.values(cart).reduce((s,v)=>s+v,0);
+  const total = Object.entries(cart).reduce((s,[id,qty])=>{
+    const p=products.find(x=>x.id==id); return s+p.price*qty;
+  },0);
+  document.getElementById('cartCount').textContent = count;
+  document.getElementById('cartTotal').textContent = 'R$ '+total.toFixed(2).replace('.',',');
+  renderCartItems();
+  document.getElementById('cartFooter').style.display = count > 0 ? 'block' : 'none';
+}
+
+function renderCartItems() {
+  const el = document.getElementById('cartItems');
+  const entries = Object.entries(cart).filter(([,q])=>q>0);
+  if(!entries.length){
+    el.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">🛒</div><div>Seu carrinho está vazio</div></div>';
+    return;
+  }
+  el.innerHTML = entries.map(([id,qty])=>{
+    const p=products.find(x=>x.id==id);
+    return `<div class="cart-item">
+      <div class="cart-item-icon">${p.icon}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${p.name}</div>
+        <div class="cart-item-price">R$ ${(p.price*qty).toFixed(2).replace('.',',')}</div>
+      </div>
+      <div class="cart-item-controls">
+        <button class="qty-btn" onclick="changeQty(${id},-1)">−</button>
+        <span class="qty-num">${qty}</span>
+        <button class="qty-btn" onclick="changeQty(${id},1)">+</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openCart(){ document.getElementById('cartOverlay').classList.add('open'); document.getElementById('cartDrawer').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeCart(){ document.getElementById('cartOverlay').classList.remove('open'); document.getElementById('cartDrawer').classList.remove('open'); document.body.style.overflow=''; }
+function selectPayment(m){ selectedPayment=m; document.getElementById('payPix').classList.toggle('active',m==='PIX'); document.getElementById('payCard').classList.toggle('active',m==='Cartão'); }
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
+
+async function finalizarPedido() {
+  const nome     = document.getElementById('fNome').value.trim();
+  const email    = document.getElementById('fEmail').value.trim();
+  const telefone = document.getElementById('fTelefone').value.trim();
+  const cpf      = document.getElementById('fCpf').value.trim();
+  const rua      = document.getElementById('fRua').value.trim();
+  const bairro   = document.getElementById('fBairro').value.trim();
+  const cidade   = document.getElementById('fCidade').value.trim();
+  const estado   = document.getElementById('fEstado').value.trim();
+  const cep      = document.getElementById('fCep').value.trim();
+
+  // Validação básica
+  const required = [{id:'fNome',v:nome},{id:'fEmail',v:email},{id:'fTelefone',v:telefone},{id:'fRua',v:rua},{id:'fCidade',v:cidade},{id:'fCep',v:cep}];
+  let valid = true;
+  required.forEach(({id,v})=>{
+    const el=document.getElementById(id);
+    if(!v){ el.classList.add('error'); valid=false; } else { el.classList.remove('error'); }
+  });
+  if(!valid){ showToast('⚠️ Preencha todos os campos obrigatórios'); return; }
+
+  const entries = Object.entries(cart).filter(([,q])=>q>0);
+  if(!entries.length){ showToast('Carrinho vazio!'); return; }
+
+  // UI de loading
+  const btn = document.getElementById('checkoutBtn');
+  const label = document.getElementById('checkoutLabel');
+  const spinner = document.getElementById('spinner');
+  btn.disabled = true;
+  label.textContent = 'Processando...';
+  spinner.style.display = 'block';
+
+  const itens = entries.map(([id,qty])=>{
+    const p=products.find(x=>x.id==id);
+    return { id:p.id, nome:p.name, descricao:p.desc, qty, preco:p.price };
+  });
+
+  const total = itens.reduce((s,i)=>s+(i.preco*i.qty),0);
+
+  try {
+    const res = await fetch('/api/criar-pagamento', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        itens, total,
+        pagamento: selectedPayment,
+        cliente: { nome, email, telefone, cpf, endereco:rua, bairro, cidade, estado, cep }
+      })
+    });
+
+    const data = await res.json();
+
+    if(!res.ok || !data.url){
+      throw new Error(data.error || 'Erro ao gerar cobrança');
+    }
+
+    // Redireciona para página de pagamento do AbacatePay
+    window.location.href = data.url;
+
+  } catch(err) {
+    showToast('❌ ' + (err.message || 'Erro ao processar. Tente novamente.'));
+    btn.disabled = false;
+    label.textContent = '🔒 Ir para o pagamento';
+    spinner.style.display = 'none';
+  }
+}
+
+renderProducts();
+</script>
+</body>
+</html>
